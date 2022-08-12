@@ -27,7 +27,9 @@ I would expect TypeDoc to document the constructor signatures contained in the v
 
 TypeDoc does not document these constructor signatures:
 
+![image](https://user-images.githubusercontent.com/26031740/184341099-f7dff5c5-f417-45e3-842f-1c42e18fef99.png)
 
+![image](https://user-images.githubusercontent.com/26031740/184341142-63eb19be-cd9c-40d8-b8e4-88499c2c60a6.png)
 
 I believe this is because [`typeLiteralConverter`](https://github.com/TypeStrong/typedoc/blob/master/src/lib/converter/types.ts#L525) does not check for constructor signatures.
 
@@ -50,7 +52,7 @@ declare const SingleAdvancedCtor: {
 
 for which TypeDoc renders the following:
 
-
+![image](https://user-images.githubusercontent.com/26031740/184341216-9cadccf5-527e-4c94-baa0-92534e50cab7.png)
 
 This is likely because the symbol associated with the variable declaration is also associated with the interface declaration. When TypeDoc extracts the declaration from the symbol in [`convertVariable` function](https://github.com/TypeStrong/typedoc/blob/e74eea694838f170e4e8becf3a701b9015e01c5d/src/lib/converter/symbols.ts#L779), it happens to get the interface declaration, which is why the [`ts.isVariableDeclaration` check](https://github.com/TypeStrong/typedoc/blob/e74eea694838f170e4e8becf3a701b9015e01c5d/src/lib/converter/symbols.ts#L802) fails and we eventually end up using [`constructorConverter`](https://github.com/TypeStrong/typedoc/blob/master/src/lib/converter/types.ts#L525).
 
@@ -74,12 +76,11 @@ declare const MultipleAdvancedCtors: {
 
 we revert back to the `typeLiteralConverter` and the constructor signatures are not rendered:
 
-
+![image](https://user-images.githubusercontent.com/26031740/184341286-c20999ad-9d92-4462-a25d-ce789fb4591c.png)
 
 ## Steps to reproduce the bug
 
-1. Clone [the reproduction
-   repository](https://github.com/ejuda/typedoc-variable-signatures-repro).
+1. Clone [the reproduction repository](https://github.com/ejuda/typedoc-variable-signatures-repro).
 2. `npm ci`
 3. `npm run docs`
 4. This will generate documentation into `docs` directory.
